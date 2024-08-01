@@ -1,0 +1,386 @@
+---
+title: "terrorism_poverty"
+output: html_notebook
+---
+
+# Data Load
+## Import Necessary Libraries
+Load the R libraries required for data manipulation, visualization, and querying. Libraries like dplyr and tidyr are used for data cleaning and transformation, ggplot2 for plotting, sqldf for SQL queries, and rnaturalearth for map data.
+```{r}
+# Load the necessary libraries
+library(DBI)
+library(RSQLite)
+library(dbplyr)
+library(dplyr)
+library(sqldf)
+library(tidyr)
+library(ggplot2)
+library(rnaturalearth)
+library(rnaturalearthdata)
+```
+
+## Load the Data
+Here, you read the datasets for terrorism and poverty from CSV files located on your local drive into R. read.csv() loads these files into data frames named terrorism_data and poverty_data.
+```{r}
+terrorism_data <- read.csv("D:/globalterrorism.csv")
+poverty_data <- read.csv("D:/pip_dataset.csv")
+```
+
+# Data Exploratory
+## Identification
+This chunk identifies and lists the unique countries present in each dataset. It helps to understand which countries are represented in both datasets and which are exclusive to each dataset.
+```{r}
+# Unique values in the country_txt column of terrorism_data
+unique_terrorism_countries <- unique(terrorism_data$country_txt)
+print("Unique values in terrorism_data$country_txt:")
+print(unique_terrorism_countries)
+
+# Unique values in the country column of poverty_data
+unique_poverty_countries <- unique(poverty_data$country)
+print("Unique values in poverty_data$country:")
+print(unique_poverty_countries)
+```
+
+## Compare Countries
+Create and execute an SQL query to compile a table that shows which countries are in each dataset. This helps to visually compare the datasets and see the overlap.
+```{r}
+# Create a table showing which dataset each country appears in
+comparison_query <- "
+SELECT country_txt AS country, 'Terrorism' AS source
+FROM terrorism_data
+UNION
+SELECT country AS country, 'Poverty' AS source
+FROM poverty_data
+"
+
+# Execute the query
+comparison_table <- sqldf(comparison_query)
+
+# View the comparison table
+print(comparison_table)
+```
+
+## Finding Common Countries
+Executes an SQL query to find countries that are present in both the terrorism and poverty datasets. The result provides a list of these common countries.
+```{r}
+# Query to find common countries in both datasets
+query_common_countries <- "
+SELECT DISTINCT country_txt
+FROM terrorism_data
+WHERE country_txt IN (SELECT DISTINCT country FROM poverty_data)
+"
+
+# Execute the query
+common_countries <- sqldf(query_common_countries)
+
+# Print results
+print(common_countries)
+```
+
+## Creating Common Country DataFrame
+This query retrieves records where both datasets have data for the same country and year. It includes columns from both datasets, allowing you to analyze the relationship between terrorism incidents and poverty metrics over time.
+```{r}
+# Query to find common countries and years in both datasets
+# Query to find common countries and years in both datasets with additional variables
+query_common_country_year <- "
+SELECT DISTINCT
+  terrorism_data.country_txt AS country,
+  terrorism_data.iyear AS year,
+  terrorism_data.attacktype1_txt,
+  terrorism_data.targtype1_txt,
+  terrorism_data.targsubtype1_txt,
+  poverty_data.headcount_ratio_international_povline,
+  poverty_data.headcount_ratio_lower_mid_income_povline,
+  poverty_data.headcount_ratio_upper_mid_income_povline,
+  poverty_data.headcount_international_povline,
+  poverty_data.headcount_lower_mid_income_povline,
+  poverty_data.headcount_upper_mid_income_povline
+FROM
+  terrorism_data
+INNER JOIN
+  poverty_data
+ON
+  terrorism_data.country_txt = poverty_data.country AND
+  terrorism_data.iyear = poverty_data.year
+"
+
+# Execute the query
+common_country_year <- sqldf(query_common_country_year)
+
+# View the common countries, years, and additional variables
+print(head(common_country_year))
+```
+
+# Data Analysis
+## Attack Type Rank
+This query counts the number of attacks for each type of attack and pivots the data for easier analysis. The result is a data frame where each row represents a country and columns show the count of different attack types.
+```{r}
+query_attacktype_count <- "
+SELECT
+  country AS country_name,
+  attacktype1_txt AS attack_type,
+  COUNT(*) AS attack_count
+FROM
+  common_country_year
+GROUP BY
+  country, attacktype1_txt
+"
+# Execute the query
+attacktype_count_df <- sqldf(query_attacktype_count)
+
+# Pivot the data
+attacktype_pivot_df <- pivot_wider(attacktype_count_df, 
+                                   names_from = attack_type, 
+                                   values_from = attack_count, 
+                                   values_fill = list(attack_count = 0))
+print(head(attacktype_pivot_df))
+```
+
+Aggregates and plots the total count of each attack type across all countries. A horizontal bar plot is created to visually represent the frequency of different attack types.
+```{r}
+# Sum the attack counts for each attack type
+attacktype_sums <- colSums(attacktype_pivot_df[,-1])  # Exclude the first column (country names)
+
+# Convert to a data frame for plotting
+attacktype_sums_df <- data.frame(
+  attack_type = names(attacktype_sums),
+  total_count = attacktype_sums
+)
+
+# Order by total_count for ranking
+attacktype_sums_df <- attacktype_sums_df[order(attacktype_sums_df$total_count, decreasing = TRUE), ]
+
+# Create the horizontal bar plot
+ggplot(attacktype_sums_df, aes(x = reorder(attack_type, total_count), y = total_count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +  # Flip coordinates for a horizontal bar plot
+  labs(title = "Ranking of Attack Types by Frequency",
+       x = "Attack Type",
+       y = "Total Count of Attacks") +
+  theme_minimal()
+```
+
+## Target Type Rank
+Similar to the previous chunk, this query counts the number of attacks for each target type and pivots the data. This allows for analysis of different target types across countries.
+```{r}
+query_targettype_count <- "
+SELECT
+  country AS country_name,
+  targtype1_txt AS target_type,
+  COUNT(*) AS target_count
+FROM
+  common_country_year
+GROUP BY
+  country, targtype1_txt
+"
+# Execute the query
+targettype_count_df <- sqldf(query_targettype_count)
+
+# Pivot the data
+targettype_pivot_df <- pivot_wider(targettype_count_df, 
+                                   names_from = target_type, 
+                                   values_from = target_count, 
+                                   values_fill = list(target_count = 0))
+print(head(targettype_pivot_df))
+```
+
+Calculates and plots the top 15 target types by frequency. The horizontal bar plot highlights which target types are most common.
+```{r}
+# Sum the attack counts for each attack type
+targettype_sums <- colSums(targettype_pivot_df[,-1])  # Exclude the first column (country names)
+
+# Convert to a data frame for plotting
+targettype_sums_df <- data.frame(
+  target_type = names(targettype_sums),
+  total_count = targettype_sums
+)
+
+# Order by total_count for ranking
+targettype_sums_df <- targettype_sums_df[order(targettype_sums_df$total_count, decreasing = TRUE), ]
+
+# Create the horizontal bar plot with filtering in the plot code
+ggplot(targettype_sums_df %>% 
+         top_n(15, total_count) %>%  # Select the top 15 target sub types
+         arrange(desc(total_count)),  # Ensure the top types are sorted in descending order
+       aes(x = reorder(target_type, total_count), y = total_count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +  # Flip coordinates for a horizontal bar plot
+  labs(title = "Top 15 Target Types by Frequency",
+       x = "Target Type",
+       y = "Total Count of Target") +
+  theme_minimal()
+```
+
+## Target Sub Type Rank
+Counts attacks for each target subtype and pivots the data for further analysis. The result helps in understanding the distribution of different subtypes across countries.
+```{r}
+common_country_year$targsubtype1_txt[common_country_year$targsubtype1_txt == ""] <- "Unknown"
+
+query_targetsubtype_count <- "
+SELECT
+  country AS country_name,
+  targsubtype1_txt AS target_sub_type,
+  COUNT(*) AS taget_sub_count
+FROM
+  common_country_year
+GROUP BY
+  country, targsubtype1_txt
+"
+# Execute the query
+targetsubtype_count_df <- sqldf(query_targetsubtype_count)
+
+# Pivot the data
+targetsubtype_pivot_df <- pivot_wider(targetsubtype_count_df, 
+                                   names_from = target_sub_type, 
+                                   values_from = taget_sub_count, 
+                                   values_fill = list(taget_sub_count = 0))
+print(head(targetsubtype_pivot_df))
+```
+
+Calculates and plots the top 15 target subtypes by frequency. It includes data cleaning steps to handle character encoding issues and produces a horizontal bar plot similar to previous plots.
+```{r}
+# Sum the attack counts for each attack type
+targetsubtype_sums <- colSums(targetsubtype_pivot_df[,-1])  # Exclude the first column (country names)
+
+# Convert to a data frame for plotting
+targetsubtype_sums_df <- data.frame(
+  target_sub_type = names(targetsubtype_sums),
+  total_count = targetsubtype_sums
+)
+
+# Order by total_count for ranking
+targetsubtype_sums_df <- targetsubtype_sums_df[order(targetsubtype_sums_df$total_count, decreasing = TRUE), ]
+
+# Convert the target_sub_type to UTF-8 encoding
+targetsubtype_sums_df$target_sub_type <- iconv(targetsubtype_sums_df$target_sub_type, from = "latin1", to = "UTF-8")
+
+# Create the horizontal bar plot with filtering in the plot code
+ggplot(targetsubtype_sums_df %>% 
+         top_n(15, total_count) %>%  # Select the top 15 target sub types
+         arrange(desc(total_count)),  # Ensure the top types are sorted in descending order
+       aes(x = reorder(target_sub_type, total_count), y = total_count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +  # Flip coordinates for a horizontal bar plot
+  labs(title = "Top 15 Target Sub Types by Frequency",
+       x = "Target Sub Type",
+       y = "Total Count of Target") +
+  theme_minimal()
+```
+
+## Calculate Average poverty Ratios
+Calculates the average poverty ratios and number of attacks per country and merges this data with previously prepared attack type, target type, and target subtype data frames to create a comprehensive dataset (final_df).
+```{r}
+# Query to calculate averages
+query_country_povline_avg <- "
+SELECT
+  country AS country_name,
+  COUNT(*) AS number_of_attack,
+  AVG(headcount_ratio_international_povline) AS avg_international_povline_ratio,
+  AVG(headcount_international_povline) AS avg_international_povline
+FROM
+  common_country_year
+GROUP BY
+  country
+"
+
+# Execute the query
+country_povline_avg <- sqldf(query_country_povline_avg)
+
+# List of data frames to merge
+dfs <- list(country_povline_avg, attacktype_pivot_df, targettype_pivot_df, targetsubtype_pivot_df)
+
+# Merge all data frames in the list by "country_name"
+final_df <- Reduce(function(x, y) merge(x, y, by = "country_name"), dfs)
+```
+
+## Plotting Poverty Line Ratio with Num of Terrorist Attack
+This scatter plot shows the relationship between the average international poverty line ratio and the number of terrorist attacks per country. A line is added to highlight trends.
+```{r}
+# Scatter plot of poverty ratio vs. number of terrorist attacks with a line
+ggplot(final_df, aes(x = avg_international_povline_ratio, y = number_of_attack)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Poverty Line vs. Terrorism Attacks",
+       x = "International Poverty Line Ratio",
+       y = "Number of Terrorism Attacks")
+```
+
+## Plot Terrorism Attack per Country in Real Map
+Loads geographical data for countries and merges it with final_df to prepare for visualization on a map. The merge aligns country names between datasets.
+```{r}
+# Load the world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Ensure the country names are consistent
+final_df$country_name <- as.character(final_df$country_name)
+
+# Merge the data
+world_merged <- left_join(world, final_df, by = c("name" = "country_name"))
+```
+
+Creates a map showing the number of terrorist attacks by country using the merged data. The map uses color gradients to represent attack counts.
+```{r}
+# Plot the map
+ggplot(data = world_merged) +
+  geom_sf(aes(fill = number_of_attack)) +
+  scale_fill_viridis_c(option = "magma", direction = -1, na.value = "white") +
+  labs(title = "Number of Terrorist Attacks by Country",
+       fill = "Number of Attacks") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+# Save Dataset
+This final chunk saves the merged dataset to a new CSV file for future use or sharing. This file contains all the combined insights from the terrorism and poverty datasets.
+```{r}
+# Save the new dataset to a CSV file
+write.csv(final_df_fixed, "D:/TerrorismxPoverty.csv", row.names = FALSE, fileEncoding = "UTF-8")
+```
+
+```{r}
+write.csv(country_povline_avg, "D:/country_povline_avg.csv", row.names = FALSE, fileEncoding = "UTF-8")
+write.csv(attacktype_pivot_df, "D:/attacktype_pivot_df.csv", row.names = FALSE, fileEncoding = "UTF-8")
+write.csv(targettype_pivot_df, "D:/targettype_pivot_df.csv", row.names = FALSE, fileEncoding = "UTF-8")
+write.csv(targetsubtype_pivot_df_fixed, "D:/targetsubtype_pivot_df.csv", row.names = FALSE, fileEncoding = "UTF-8")
+
+#(country_povline_avg, attacktype_pivot_df, targettype_pivot_df, targetsubtype_pivot_df)
+```
+
+```{r}
+# Function to clean encoding issues in text
+clean_encoding <- function(text) {
+  # Replace problematic characters
+  text <- iconv(text, from = "UTF-8", to = "ASCII//TRANSLIT", sub = "?")
+  return(text)
+}
+
+# Apply the function to column names and data
+colnames(targetsubtype_pivot_df) <- sapply(colnames(targetsubtype_pivot_df), clean_encoding)
+
+# Check and fix any problematic entries in the data frame
+targetsubtype_pivot_df[] <- lapply(targetsubtype_pivot_df, function(x) {
+  if (is.character(x)) {
+    clean_encoding(x)
+  } else {
+    x
+  }
+})
+```
+
+```{r}
+targetsubtype_pivot_df_fixed <- data.frame(lapply(final_df, function(x) {
+  if (is.character(x)) {
+    clean_encoding(x)
+  } else {
+    x
+  }
+}), stringsAsFactors = FALSE)
+
+colnames(targetsubtype_pivot_df_fixed) <- sapply(colnames(targetsubtype_pivot_df), clean_encoding)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
