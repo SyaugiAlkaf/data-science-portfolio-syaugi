@@ -1,7 +1,7 @@
 # ![Data Science](https://mrwallpaper.com/images/hd/minimalist-desktop-gray-us-map-4yj27p7n48cug61s.jpg) <!-- Replace with the actual path to your image -->
 
 # Mohammad Ali Syaugi
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://https://www.linkedin.com/in/syaugialkaf/) 
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/syaugialkaf) 
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SyaugiAlkaf)
 
 Welcome to my Data Science portfolio! This repository showcases a variety of projects I have worked on, covering areas like Machine Learning, Data Analysis, Large Language Models (LLMs), Reinforcement Learning, and Computer Vision. Each project reflects my hands-on experience and the application of advanced techniques to solve real-world problems.
@@ -11,7 +11,7 @@ Iâ€™m a Computer Science graduate with a 3.53 GPA from Brawijaya University. Iâ€
 ## ðŸ§­ Navigation
 
 - [Introduction](#Introduction)
-- [Machine Learning](#Machine-Learning)
+- [Machine Learning](#-machine-learning)
 - [Data Analysis](#-data-analysis)
 - [LLM (Large Language Model)](#-llm-large-language-model)
 - [Reinforcement Learning](#-reinforcement-learning)
@@ -94,4 +94,4 @@ Iâ€™m a Computer Science graduate with a 3.53 GPA from Brawijaya University. Iâ€
 
 *"Data science is the art of turning data into actions. It's not just about numbers; it's about making a meaningful impact in the world. Keep learning, keep exploring, and let your curiosity guide you through the vast oceans of data."*
 
-Thank you for exploring my portfolio. Feel free to reach out to me on [LinkedIn](https://https://www.linkedin.com/in/syaugialkaf/) or check out more of my work on [GitHub](https://github.com/SyaugiAlkaf).
+Thank you for exploring my portfolio. Feel free to reach out to me on [LinkedIn](https://www.linkedin.com/in/syaugialkaf) or check out more of my work on [GitHub](https://github.com/SyaugiAlkaf).
