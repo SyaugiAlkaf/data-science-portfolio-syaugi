@@ -1,4 +1,4 @@
-# ![Data Science](path_to_your_image_here) <!-- Replace with the actual path to your image -->
+# ![Data Science](https://mrwallpaper.com/images/hd/minimalist-desktop-gray-us-map-4yj27p7n48cug61s.jpg) <!-- Replace with the actual path to your image -->
 
 # Introduction
 Welcome to my Data Science portfolio! This repository showcases a variety of projects I have worked on, covering areas like Machine Learning, Data Analysis, Large Language Models (LLMs), Reinforcement Learning, and Computer Vision. Each project reflects my hands-on experience and the application of advanced techniques to solve real-world problems.
