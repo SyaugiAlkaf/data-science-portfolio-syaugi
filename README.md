@@ -10,16 +10,21 @@ I’m a Computer Science graduate with a 3.53 GPA from Brawijaya University. I�
 
 ## 🧭 Navigation
 
-- [Machine Learning](#machine-learning)
-- [Data Analysis](#data-analysis)
-- [LLM (Large Language Model)](#llm-large-language-model)
-- [Reinforcement Learning](#reinforcement-learning)
-- [Computer Vision](#computer-vision)
-- [Micro Projects](#micro-projects)
+- [Introduction](#Introduction)
+- [Machine Learning](#Machine-Learning)
+- [Data Analysis](#-data-analysis)
+- [LLM (Large Language Model)](#-llm-large-language-model)
+- [Reinforcement Learning](#-reinforcement-learning)
+- [Computer Vision](#-computer-vision)
+- [Micro Projects](#-micro-projects)
+- [Closing Statement](#closing-statement)
 
-# Data Science Projects
+# Introduction
+Welcome to my Data Science portfolio! This repository showcases a variety of projects I have worked on, covering areas like Machine Learning, Data Analysis, Large Language Models (LLMs), Reinforcement Learning, and Computer Vision. Each project reflects my hands-on experience and the application of advanced techniques to solve real-world problems.
 
-## 🧠 Machine Learning
+I’m a Computer Science graduate with a 3.53 GPA from Brawijaya University. I’ve sharpened my data science skills through the Bangkit Academy’s Machine Learning bootcamp, where I dived deep into advanced machine learning techniques. During my internship, I put this knowledge into action by implementing OpenAI’s language models to create a chatbot. Moreover, I can perform oral and written language capability both in Indonesian and English.
+
+# 🧠 Machine Learning
 
 - **Customer's Purchase Probability Based On E-Commerce Clickstream Data**  
   *After an exploration, I've decided to predict the probability of a customer making a purchase using clickstream data from an e-commerce platform using Deep Learning methods. There's 2 notebooks for this project, the [Feature Engineering](https://github.com/SyaugiAlkaf/data-science-portfolio-syaugi/blob/main/2-e-commerce-c-t-feature-engineering.ipynb) notebook and [Prediction](https://github.com/SyaugiAlkaf/data-science-portfolio-syaugi/blob/main/3-data-analysis-purchase-probability.ipynb) notebook.*
@@ -84,3 +89,9 @@ I’m a Computer Science graduate with a 3.53 GPA from Brawijaya University. I�
 
 - **Toxic Classification**  
   *Developing a model to classify toxic comments in online discussions, improving content moderation. [Code](https://github.com/SyaugiAlkaf/syaugi-portfolio/tree/main/toxicclassification).*
+
+## Closing Statement
+
+*"Data science is the art of turning data into actions. It's not just about numbers; it's about making a meaningful impact in the world. Keep learning, keep exploring, and let your curiosity guide you through the vast oceans of data."*
+
+Thank you for exploring my portfolio. Feel free to reach out to me on [LinkedIn](https://www.linkedin.com/in/your-linkedin-profile) or check out more of my work on [GitHub](https://github.com/SyaugiAlkaf).
