@@ -30,13 +30,13 @@ Iâ€™m a Computer Science graduate with a 3.53 GPA from Brawijaya University. Iâ€
   *After an exploration, I've decided to predict the probability of a customer making a purchase using clickstream data from an e-commerce platform using Deep Learning methods. There's 2 notebooks for this project, the [Feature Engineering](https://github.com/SyaugiAlkaf/data-science-portfolio-syaugi/blob/main/2-e-commerce-c-t-feature-engineering.ipynb) notebook and [Prediction](https://github.com/SyaugiAlkaf/data-science-portfolio-syaugi/blob/main/3-data-analysis-purchase-probability.ipynb) notebook.*
 
 - **Fraud Detection on Crypto Coin (Ethereum)**  
-  *Using an open database about Ethereum (ETH) transaction information, my goal is to build a model to detect fraudulent activities in Ethereum transactions, enhancing the security of crypto assets. You can see the presentation [Here](https://www.canva.com/design/DAGM_b1oWIE/K5pZiW0LdGxT0zixp3BNhw/edit).*
+  *Using an open database about Ethereum (ETH) transaction information, my goal is to build a model to detect fraudulent activities in Ethereum transactions, enhancing the security of crypto assets. You can see the presentation [Here](https://www.can.com/design/DAGM_b1oWIE/K5pZiW0LdGxT0zixp3BNhw/edit).*
 
 - **Customer Segmentation Based On E-Commerce Database**  
-  *Utilizing clustering techniques to segment customers by buying patterns and also spending profiles, enabling targeted marketing/sales strategies in e-commerce, especially to retain a specific segment of customers. You can see the presentation [Here](https://www.canva.com/design/DAGM_W_NStk/uhiPI0UiJDpaGBdjF1chwQ/edit).*
+  *Utilizing clustering techniques to segment customers by buying patterns and also spending profiles, enabling targeted marketing/sales strategies in e-commerce, especially to retain a specific segment of customers. You can see the presentation [Here](https://www.can.com/design/DAGM_W_NStk/uhiPI0UiJDpaGBdjF1chwQ/edit).*
 
 - **Rain Prediction for Farmer's Decision Making**  
-  *Developing a model to predict rainfall, helping farmers make informed decisions about crop management. You can see the presentation [Here](https://www.canva.com/design/DAGM_N-1KWs/nH4DgxUGZ8JNOJsMfHvbxQ/edit) and the notebook [Here](https://github.com/SyaugiAlkaf/data-science-portfolio-syaugi/blob/main/rain_pred.ipynb).*
+  *Developing a model to predict rainfall, helping farmers make informed decisions about crop management. You can see the presentation [Here](https://www.can.com/design/DAGM_N-1KWs/nH4DgxUGZ8JNOJsMfHvbxQ/edit) and the notebook [Here](https://github.com/SyaugiAlkaf/data-science-portfolio-syaugi/blob/main/rain_pred.ipynb).*
   
 - **Plant Disease and Soil Detection (Terrafarms's Bangkit Academy Project)**  
   *Providing farmers with the tools and technologies they need to achieve higher yields, improve efficiency, and promote sustainability. This plant and soil detection was a small part of my big project [Terrafarms](https://github.com/Terrafarms). You can see the specific machine learning implementation [Here](https://github.com/Terrafarms/bangkit-machine-learning).* 
